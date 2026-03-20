@@ -21,7 +21,7 @@
 - Todas las clases deben tener realizadas sus pruebas unitarias respectivas, cumpliendo los principios de atomicidad
 
 # Documentación: 
-- Todos los endpoints deben estar documentados son OpenAPI.
+- Todos los endpoints deben estar documentados con OpenAPI.
 
 ## Dependency and Integration Notes
 - Web/API capas basado en servlet y con programación funcional (`spring-boot-starter-web`), no WebFlux.

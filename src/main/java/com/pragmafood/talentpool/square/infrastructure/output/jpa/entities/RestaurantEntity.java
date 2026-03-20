@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "restaurantes")
+@Table(name = "restaurants")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,20 +24,20 @@ public class RestaurantEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String nombre;
+    private String name;
 
     @Column(nullable = false)
     private String nit;
 
     @Column(nullable = false)
-    private String direccion;
+    private String address;
 
     @Column(nullable = false, length = 13)
-    private String telefono;
+    private String phone;
 
-    @Column(name = "url_logo", nullable = false)
-    private String urlLogo;
+    @Column(name = "logo_url", nullable = false)
+    private String logoUrl;
 
-    @Column(name = "id_propietario", nullable = false)
-    private Long idPropietario;
+    @Column(name = "owner_id", nullable = false)
+    private Long ownerId;
 }
