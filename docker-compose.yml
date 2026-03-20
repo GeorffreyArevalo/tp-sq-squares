@@ -1,0 +1,15 @@
+services:
+  db-square:
+    image: postgres:16.1
+    container_name: db-square
+    volumes:
+      - square:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: square
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5433:5432"
+volumes:
+  square:
+    external: false
