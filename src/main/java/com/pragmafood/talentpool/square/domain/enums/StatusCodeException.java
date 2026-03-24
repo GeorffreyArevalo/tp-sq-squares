@@ -8,7 +8,8 @@ public enum StatusCodeException {
     INVALID_FIELDS("40-IFD"),
     USER_NOT_OWNER("40-UNO"),
     USER_UNDER_AGE("40-UUA"),
-    RESTAURANT_NOT_FOUND("44-RNF");
+    RESTAURANT_NOT_FOUND("44-RNF"),
+    DISH_NOT_FOUND("44-DNF");
 
     private final String code;
 

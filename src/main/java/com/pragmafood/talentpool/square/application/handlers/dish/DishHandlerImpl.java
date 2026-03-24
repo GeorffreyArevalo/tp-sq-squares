@@ -1,6 +1,7 @@
 package com.pragmafood.talentpool.square.application.handlers.dish;
 
 import com.pragmafood.talentpool.square.application.dtos.requests.DishRequest;
+import com.pragmafood.talentpool.square.application.dtos.requests.UpdateDishRequest;
 import com.pragmafood.talentpool.square.application.dtos.responses.DishResponse;
 import com.pragmafood.talentpool.square.application.mappers.DishRequestMapper;
 import com.pragmafood.talentpool.square.domain.api.DishServicePort;
@@ -22,6 +23,18 @@ public class DishHandlerImpl implements DishHandler {
     @Transactional
     public DishResponse createDish(DishRequest dishRequest) {
         Dish dish = dishServicePort.createDish(dishRequestMapper.toDomain(dishRequest));
+        return dishRequestMapper.toResponse(dish);
+    }
+
+    @Override
+    @Transactional
+    public DishResponse updateDish(Long dishId, UpdateDishRequest updateDishRequest) {
+        Dish dish = dishServicePort.updateDish(
+                dishId,
+                updateDishRequest.price(),
+                updateDishRequest.description(),
+                updateDishRequest.ownerId()
+        );
         return dishRequestMapper.toResponse(dish);
     }
 }

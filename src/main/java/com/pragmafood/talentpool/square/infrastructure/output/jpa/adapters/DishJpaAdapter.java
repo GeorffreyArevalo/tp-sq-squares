@@ -1,5 +1,7 @@
 package com.pragmafood.talentpool.square.infrastructure.output.jpa.adapters;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.pragmafood.talentpool.square.domain.models.Dish;
@@ -22,5 +24,11 @@ public class DishJpaAdapter implements DishPersistencePort {
         DishEntity entity = dishEntityMapper.toEntity(dish);
         DishEntity savedEntity = dishRepository.save(entity);
         return dishEntityMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public Optional<Dish> findById(Long id) {
+        return dishRepository.findById(id)
+                .map(dishEntityMapper::toDomain);
     }
 }

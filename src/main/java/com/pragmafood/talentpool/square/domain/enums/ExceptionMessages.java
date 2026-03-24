@@ -19,7 +19,8 @@ public enum ExceptionMessages {
     DISH_CATEGORY_REQUIRED("The category is required"),
     DISH_RESTAURANT_ID_REQUIRED("The restaurant ID is required"),
     RESTAURANT_NOT_FOUND("The restaurant was not found"),
-    USER_NOT_RESTAURANT_OWNER("The user is not the owner of this restaurant");
+    USER_NOT_RESTAURANT_OWNER("The user is not the owner of this restaurant"),
+    DISH_NOT_FOUND("The dish was not found");
 
     private final String message;
 

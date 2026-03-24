@@ -2,6 +2,7 @@ package com.pragmafood.talentpool.square.domain.usecase;
 
 import com.pragmafood.talentpool.square.domain.api.DishServicePort;
 import com.pragmafood.talentpool.square.domain.enums.ExceptionMessages;
+import com.pragmafood.talentpool.square.domain.exceptions.DishNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.InvalidFieldsException;
 import com.pragmafood.talentpool.square.domain.exceptions.RestaurantNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.UserNotOwnerException;
@@ -82,5 +83,23 @@ public class DishUseCase implements DishServicePort {
         if (requestOwnerId == null || !restaurantOwnerId.equals(requestOwnerId)) {
             throw new UserNotOwnerException(ExceptionMessages.USER_NOT_RESTAURANT_OWNER.getMessage());
         }
+    }
+
+    @Override
+    public Dish updateDish(Long dishId, Integer price, String description, Long ownerId) {
+        Dish dish = dishPersistencePort.findById(dishId)
+                .orElseThrow(() -> new DishNotFoundException(ExceptionMessages.DISH_NOT_FOUND.getMessage()));
+
+        Restaurant restaurant = restaurantPersistencePort.findById(dish.getRestaurant().getId())
+                .orElseThrow(() -> new RestaurantNotFoundException(ExceptionMessages.RESTAURANT_NOT_FOUND.getMessage()));
+
+        validateOwnership(restaurant.getOwnerId(), ownerId);
+        validatePrice(price);
+        validateDescription(description);
+
+        dish.setPrice(price);
+        dish.setDescription(description);
+
+        return dishPersistencePort.saveDish(dish);
     }
 }
