@@ -21,19 +21,21 @@ public class DishHandlerImpl implements DishHandler {
 
     @Override
     @Transactional
-    public DishResponse createDish(DishRequest dishRequest) {
-        Dish dish = dishServicePort.createDish(dishRequestMapper.toDomain(dishRequest));
+    public DishResponse createDish(DishRequest dishRequest, Long ownerId) {
+        Dish dish = dishRequestMapper.toDomain(dishRequest);
+        dish.setOwnerId(ownerId);
+        dish = dishServicePort.createDish(dish);
         return dishRequestMapper.toResponse(dish);
     }
 
     @Override
     @Transactional
-    public DishResponse updateDish(Long dishId, UpdateDishRequest updateDishRequest) {
+    public DishResponse updateDish(Long dishId, UpdateDishRequest updateDishRequest, Long ownerId) {
         Dish dish = dishServicePort.updateDish(
                 dishId,
                 updateDishRequest.price(),
                 updateDishRequest.description(),
-                updateDishRequest.ownerId()
+                ownerId
         );
         return dishRequestMapper.toResponse(dish);
     }

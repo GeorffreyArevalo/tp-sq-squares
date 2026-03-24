@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,17 +27,20 @@ public class DishRestController {
     private final DishHandler dishHandler;
 
     @PostMapping
-    public ResponseEntity<DishResponse> createDish(@Valid @RequestBody DishRequest dishRequest) {
+    public ResponseEntity<DishResponse> createDish(
+            @Valid @RequestBody DishRequest dishRequest,
+            @AuthenticationPrincipal Jwt jwt) {
+        Long ownerId = Long.valueOf(jwt.getSubject());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(
-                    dishHandler.createDish(dishRequest)
-                );
+                .body(dishHandler.createDish(dishRequest, ownerId));
     }
 
     @PatchMapping("/{dishId}")
     public ResponseEntity<DishResponse> updateDish(
             @PathVariable("dishId") Long dishId,
-            @Valid @RequestBody UpdateDishRequest updateDishRequest) {
-        return ResponseEntity.ok(dishHandler.updateDish(dishId, updateDishRequest));
+            @Valid @RequestBody UpdateDishRequest updateDishRequest,
+            @AuthenticationPrincipal Jwt jwt) {
+        Long ownerId = Long.valueOf(jwt.getSubject());
+        return ResponseEntity.ok(dishHandler.updateDish(dishId, updateDishRequest, ownerId));
     }
 }

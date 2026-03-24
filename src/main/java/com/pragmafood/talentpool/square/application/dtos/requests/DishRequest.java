@@ -23,10 +23,7 @@ public record DishRequest(
     String category,
 
     @NotNull(message = "The restaurant ID is required")
-    Long restaurantId,
+    Long restaurantId
 
-    @NotNull(message = "The owner ID is required")
-    Long ownerId
-    
 ){
 }

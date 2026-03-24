@@ -9,9 +9,7 @@ public record UpdateDishRequest(
     Integer price,
     
     @NotNull(message = "The dish description is required")
-    String description,
-    
-    @NotNull(message = "The owner ID is required")
-    Long ownerId
+    String description
+
 ) {}
 

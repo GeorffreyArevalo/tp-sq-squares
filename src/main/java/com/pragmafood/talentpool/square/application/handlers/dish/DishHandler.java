@@ -6,7 +6,7 @@ import com.pragmafood.talentpool.square.application.dtos.responses.DishResponse;
 
 public interface DishHandler {
 
-    DishResponse createDish(DishRequest dishRequest);
+    DishResponse createDish(DishRequest dishRequest, Long ownerId);
 
-    DishResponse updateDish(Long dishId, UpdateDishRequest updateDishRequest);
+    DishResponse updateDish(Long dishId, UpdateDishRequest updateDishRequest, Long ownerId);
 }

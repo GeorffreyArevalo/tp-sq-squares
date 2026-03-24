@@ -19,6 +19,10 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
+security:
+  jwt:
+    public-key: ${PUBLIC_KEY}
+
 feign:
   client:
     user-service:
