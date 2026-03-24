@@ -1,6 +1,7 @@
 package com.pragmafood.talentpool.square.infrastructure.input.rest;
 
 import com.pragmafood.talentpool.square.application.dtos.requests.DishRequest;
+import com.pragmafood.talentpool.square.application.dtos.requests.ToggleDishStatusRequest;
 import com.pragmafood.talentpool.square.application.dtos.requests.UpdateDishRequest;
 import com.pragmafood.talentpool.square.application.dtos.responses.DishResponse;
 import com.pragmafood.talentpool.square.application.handlers.dish.DishHandler;
@@ -42,5 +43,14 @@ public class DishRestController {
             @AuthenticationPrincipal Jwt jwt) {
         Long ownerId = Long.valueOf(jwt.getSubject());
         return ResponseEntity.ok(dishHandler.updateDish(dishId, updateDishRequest, ownerId));
+    }
+
+    @PatchMapping("/{dishId}/status")
+    public ResponseEntity<DishResponse> toggleDishStatus(
+            @PathVariable("dishId") Long dishId,
+            @Valid @RequestBody ToggleDishStatusRequest toggleDishStatusRequest,
+            @AuthenticationPrincipal Jwt jwt) {
+        Long ownerId = Long.valueOf(jwt.getSubject());
+        return ResponseEntity.ok(dishHandler.toggleDishStatus(dishId, toggleDishStatusRequest.active(), ownerId));
     }
 }

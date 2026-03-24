@@ -102,4 +102,19 @@ public class DishUseCase implements DishServicePort {
 
         return dishPersistencePort.saveDish(dish);
     }
+
+    @Override
+    public Dish toggleDishStatus(Long dishId, Boolean active, Long ownerId) {
+        Dish dish = dishPersistencePort.findById(dishId)
+                .orElseThrow(() -> new DishNotFoundException(ExceptionMessages.DISH_NOT_FOUND.getMessage()));
+
+        Restaurant restaurant = restaurantPersistencePort.findById(dish.getRestaurant().getId())
+                .orElseThrow(() -> new RestaurantNotFoundException(ExceptionMessages.RESTAURANT_NOT_FOUND.getMessage()));
+
+        validateOwnership(restaurant.getOwnerId(), ownerId);
+
+        dish.setActive(active);
+
+        return dishPersistencePort.saveDish(dish);
+    }
 }

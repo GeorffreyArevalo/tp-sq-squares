@@ -39,4 +39,11 @@ public class DishHandlerImpl implements DishHandler {
         );
         return dishRequestMapper.toResponse(dish);
     }
+
+    @Override
+    @Transactional
+    public DishResponse toggleDishStatus(Long dishId, Boolean active, Long ownerId) {
+        Dish dish = dishServicePort.toggleDishStatus(dishId, active, ownerId);
+        return dishRequestMapper.toResponse(dish);
+    }
 }

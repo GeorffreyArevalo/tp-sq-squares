@@ -9,4 +9,6 @@ public interface DishHandler {
     DishResponse createDish(DishRequest dishRequest, Long ownerId);
 
     DishResponse updateDish(Long dishId, UpdateDishRequest updateDishRequest, Long ownerId);
+
+    DishResponse toggleDishStatus(Long dishId, Boolean active, Long ownerId);
 }

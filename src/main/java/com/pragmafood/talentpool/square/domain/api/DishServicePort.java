@@ -7,4 +7,6 @@ public interface DishServicePort {
     Dish createDish(Dish dish);
 
     Dish updateDish(Long dishId, Integer price, String description, Long ownerId);
+
+    Dish toggleDishStatus(Long dishId, Boolean active, Long ownerId);
 }
