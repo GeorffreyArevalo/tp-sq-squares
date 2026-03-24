@@ -7,7 +7,8 @@ public enum StatusCodeException {
     INVALID_PASSWORD("40-IPW"),
     INVALID_FIELDS("40-IFD"),
     USER_NOT_OWNER("40-UNO"),
-    USER_UNDER_AGE("40-UUA");
+    USER_UNDER_AGE("40-UUA"),
+    RESTAURANT_NOT_FOUND("44-RNF");
 
     private final String code;
 
