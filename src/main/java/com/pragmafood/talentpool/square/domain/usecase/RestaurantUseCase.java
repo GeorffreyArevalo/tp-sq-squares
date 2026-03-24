@@ -6,6 +6,7 @@ import com.pragmafood.talentpool.square.domain.constants.RestaurantConstants;
 import com.pragmafood.talentpool.square.domain.enums.ExceptionMessages;
 import com.pragmafood.talentpool.square.domain.exceptions.InvalidFieldsException;
 import com.pragmafood.talentpool.square.domain.exceptions.UserNotOwnerException;
+import com.pragmafood.talentpool.square.domain.models.PaginatedResult;
 import com.pragmafood.talentpool.square.domain.models.Restaurant;
 import com.pragmafood.talentpool.square.domain.spi.RestaurantPersistencePort;
 
@@ -27,6 +28,11 @@ public class RestaurantUseCase implements RestaurantServicePort {
         validateOwnerRole(restaurant.getOwnerId());
 
         return restaurantPersistencePort.saveRestaurant(restaurant);
+    }
+
+    @Override
+    public PaginatedResult<Restaurant> listRestaurants(int page, int size, String sortDirection) {
+        return restaurantPersistencePort.findAllRestaurants(page, size, sortDirection);
     }
 
     private void validateName(String nombre) {
