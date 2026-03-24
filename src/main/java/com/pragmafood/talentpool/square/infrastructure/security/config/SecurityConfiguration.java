@@ -1,4 +1,4 @@
-package com.pragmafood.talentpool.square.infrastructure.configuration;
+package com.pragmafood.talentpool.square.infrastructure.security.config;
 
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPublicKey;
@@ -24,12 +24,19 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.pragmafood.talentpool.square.infrastructure.security.exceptions.SecurityExceptionHandler;
+
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     @Value("${security.jwt.public-key}")
     private String publicKeyContent;
+
+    private final SecurityExceptionHandler securityExceptionHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,15 +55,15 @@ public class SecurityConfiguration {
                     .decoder(jwtDecoder())
                     .jwtAuthenticationConverter(jwtAuthenticationConverter())
                 )
+                .authenticationEntryPoint(securityExceptionHandler)
+                .accessDeniedHandler(securityExceptionHandler)
+            )
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint(securityExceptionHandler)
+                .accessDeniedHandler(securityExceptionHandler)
             );
         return http.build();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        RSAPublicKey rsaPublicKey = parsePublicKey(publicKeyContent);
-        return NimbusJwtDecoder.withPublicKey(rsaPublicKey).build();
-    }
+    }    
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
@@ -75,6 +82,12 @@ public class SecurityConfiguration {
         };
     }
 
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        RSAPublicKey rsaPublicKey = parsePublicKey(publicKeyContent);
+        return NimbusJwtDecoder.withPublicKey(rsaPublicKey).build();
+    }
+
     private RSAPublicKey parsePublicKey(String key) {
         try {
             String publicKeyPEM = key
@@ -89,4 +102,6 @@ public class SecurityConfiguration {
             throw new IllegalStateException("Failed to parse RSA public key", e);
         }
     }
+
+    
 }
