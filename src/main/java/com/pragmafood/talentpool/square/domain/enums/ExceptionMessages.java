@@ -20,7 +20,13 @@ public enum ExceptionMessages {
     DISH_RESTAURANT_ID_REQUIRED("The restaurant ID is required"),
     RESTAURANT_NOT_FOUND("The restaurant was not found"),
     USER_NOT_RESTAURANT_OWNER("The user is not the owner of this restaurant"),
-    DISH_NOT_FOUND("The dish was not found");
+    DISH_NOT_FOUND("The dish was not found"),
+    ORDER_DISHES_REQUIRED("The order must contain at least one dish"),
+    ORDER_RESTAURANT_ID_REQUIRED("The restaurant ID is required for the order"),
+    ORDER_DISH_QUANTITY_INVALID("Each dish quantity must be a positive integer greater than 0"),
+    ORDER_DISHES_NOT_SAME_RESTAURANT("All dishes must belong to the specified restaurant"),
+    ORDER_DISH_NOT_FOUND("One or more dishes were not found"),
+    ACTIVE_ORDER_EXISTS("The client already has an active order");
 
     private final String message;
 

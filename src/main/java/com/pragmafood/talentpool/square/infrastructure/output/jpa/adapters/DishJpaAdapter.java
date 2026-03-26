@@ -39,6 +39,13 @@ public class DishJpaAdapter implements DishPersistencePort {
     }
 
     @Override
+    public List<Dish> findAllByIds(List<Long> ids) {
+        return dishRepository.findAllById(ids).stream()
+                .map(dishEntityMapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public PaginatedResult<Dish> findDishesByRestaurantId(Long restaurantId, String category, int page, int size, String sortDirection) {
         Sort sort = Sort.by("desc".equalsIgnoreCase(sortDirection) ? Sort.Direction.DESC : Sort.Direction.ASC, "name");
         Pageable pageable = PageRequest.of(page, size, sort);

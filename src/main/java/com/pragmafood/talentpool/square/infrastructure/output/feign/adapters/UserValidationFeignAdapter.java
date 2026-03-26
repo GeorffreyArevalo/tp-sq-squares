@@ -7,7 +7,9 @@ import com.pragmafood.talentpool.square.infrastructure.output.feign.client.UserF
 import com.pragmafood.talentpool.square.infrastructure.output.feign.responses.UserResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class UserValidationFeignAdapter implements UserClientPort {

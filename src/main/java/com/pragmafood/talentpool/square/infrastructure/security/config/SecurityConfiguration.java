@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/restaurant").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/dish").hasRole("OWNER")
                 .requestMatchers(HttpMethod.PATCH, "/dish/**").hasRole("OWNER")
+                .requestMatchers(HttpMethod.POST, "/order").hasRole("CLIENT")
                 .anyRequest().authenticated()
             )
             .oauth2ResourceServer(oauth2 -> oauth2
