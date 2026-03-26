@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +45,13 @@ public class OrderRestController {
             @AuthenticationPrincipal Jwt jwt) {
         Long employeeId = Long.valueOf(jwt.getSubject());
         return ResponseEntity.ok(orderHandler.listOrdersByStatus(employeeId, status, page, size));
+    }
+
+    @PatchMapping("/{orderId}/assign")
+    public ResponseEntity<OrderResponse> assignOrder(
+            @PathVariable("orderId") Long orderId,
+            @AuthenticationPrincipal Jwt jwt) {
+        Long employeeId = Long.valueOf(jwt.getSubject());
+        return ResponseEntity.ok(orderHandler.assignOrder(orderId, employeeId));
     }
 }

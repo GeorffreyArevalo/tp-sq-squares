@@ -1,6 +1,7 @@
 package com.pragmafood.talentpool.square.infrastructure.output.jpa.adapters;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -56,5 +57,11 @@ public class OrderJpaAdapter implements OrderPersistencePort {
                 entityPage.getTotalElements(),
                 entityPage.getTotalPages()
         );
+    }
+
+    @Override
+    public Optional<Order> findById(Long orderId) {
+        return orderRepository.findById(orderId)
+                .map(orderEntityMapper::toDomain);
     }
 }

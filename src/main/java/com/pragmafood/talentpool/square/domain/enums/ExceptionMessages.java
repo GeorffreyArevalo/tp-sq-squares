@@ -29,7 +29,10 @@ public enum ExceptionMessages {
     ACTIVE_ORDER_EXISTS("The client already has an active order"),
     EMPLOYEE_ID_REQUIRED("The employee ID is required"),
     EMPLOYEE_RESTAURANT_ID_REQUIRED("The restaurant ID is required to assign an employee"),
-    EMPLOYEE_RESTAURANT_NOT_FOUND("The employee is not associated with any restaurant");
+    EMPLOYEE_RESTAURANT_NOT_FOUND("The employee is not associated with any restaurant"),
+    ORDER_NOT_FOUND("The order was not found"),
+    ORDER_NOT_PENDING("The order is not in pending status"),
+    ORDER_NOT_BELONGS_TO_RESTAURANT("The order does not belong to the employee's restaurant");
 
     private final String message;
 

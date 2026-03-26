@@ -10,6 +10,7 @@ public record OrderResponse(
     Long restaurantId,
     List<OrderDishResponse> dishes,
     String status,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    Long assignedEmployeeId
 
 ) {}

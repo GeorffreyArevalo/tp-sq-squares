@@ -9,4 +9,6 @@ public interface OrderServicePort {
     Order createOrder(Order order);
 
     PaginatedResult<Order> listOrdersByStatus(Long employeeId, OrderStatus status, int page, int size);
+
+    Order assignOrderToEmployee(Long orderId, Long employeeId);
 }

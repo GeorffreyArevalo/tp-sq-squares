@@ -13,17 +13,19 @@ public class Order {
     private List<OrderDish> dishes;
     private OrderStatus status;
     private LocalDateTime createdAt;
+    private Long assignedEmployeeId;
 
     public Order() {
     }
 
-    public Order(Long id, Long clientId, Long restaurantId, List<OrderDish> dishes, OrderStatus status, LocalDateTime createdAt) {
+    public Order(Long id, Long clientId, Long restaurantId, List<OrderDish> dishes, OrderStatus status, LocalDateTime createdAt, Long assignedEmployeeId) {
         this.id = id;
         this.clientId = clientId;
         this.restaurantId = restaurantId;
         this.dishes = dishes;
         this.status = status;
         this.createdAt = createdAt;
+        this.assignedEmployeeId = assignedEmployeeId;
     }
 
     public Long getId() {
@@ -72,5 +74,13 @@ public class Order {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getAssignedEmployeeId() {
+        return assignedEmployeeId;
+    }
+
+    public void setAssignedEmployeeId(Long assignedEmployeeId) {
+        this.assignedEmployeeId = assignedEmployeeId;
     }
 }

@@ -10,6 +10,9 @@ import com.pragmafood.talentpool.square.domain.exceptions.ActiveOrderExistsExcep
 import com.pragmafood.talentpool.square.domain.exceptions.DishNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.EmployeeRestaurantNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.InvalidFieldsException;
+import com.pragmafood.talentpool.square.domain.exceptions.OrderNotBelongsToRestaurantException;
+import com.pragmafood.talentpool.square.domain.exceptions.OrderNotFoundException;
+import com.pragmafood.talentpool.square.domain.exceptions.OrderNotPendingException;
 import com.pragmafood.talentpool.square.domain.exceptions.RestaurantNotFoundException;
 import com.pragmafood.talentpool.square.domain.models.Dish;
 import com.pragmafood.talentpool.square.domain.models.EmployeeRestaurant;
@@ -88,6 +91,28 @@ public class OrderUseCase implements OrderServicePort {
                 .orElseThrow(() -> new EmployeeRestaurantNotFoundException(ExceptionMessages.EMPLOYEE_RESTAURANT_NOT_FOUND.getMessage()));
 
         return orderPersistencePort.findOrdersByRestaurantIdAndStatus(employeeRestaurant.getRestaurantId(), status, page, size);
+    }
+
+    @Override
+    public Order assignOrderToEmployee(Long orderId, Long employeeId) {
+        EmployeeRestaurant employeeRestaurant = employeeRestaurantPersistencePort.findByEmployeeId(employeeId)
+                .orElseThrow(() -> new EmployeeRestaurantNotFoundException(ExceptionMessages.EMPLOYEE_RESTAURANT_NOT_FOUND.getMessage()));
+
+        Order order = orderPersistencePort.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(ExceptionMessages.ORDER_NOT_FOUND.getMessage()));
+
+        if (!order.getRestaurantId().equals(employeeRestaurant.getRestaurantId())) {
+            throw new OrderNotBelongsToRestaurantException(ExceptionMessages.ORDER_NOT_BELONGS_TO_RESTAURANT.getMessage());
+        }
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new OrderNotPendingException(ExceptionMessages.ORDER_NOT_PENDING.getMessage());
+        }
+
+        order.setAssignedEmployeeId(employeeId);
+        order.setStatus(OrderStatus.IN_PREPARATION);
+
+        return orderPersistencePort.saveOrder(order);
     }
 
     private void validateDishes(List<OrderDish> dishes) {

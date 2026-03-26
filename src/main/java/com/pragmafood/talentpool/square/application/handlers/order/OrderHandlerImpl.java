@@ -50,4 +50,11 @@ public class OrderHandlerImpl implements OrderHandler {
                 result.getTotalPages()
         );
     }
+
+    @Override
+    @Transactional
+    public OrderResponse assignOrder(Long orderId, Long employeeId) {
+        Order order = orderServicePort.assignOrderToEmployee(orderId, employeeId);
+        return orderRequestMapper.toResponse(order);
+    }
 }
