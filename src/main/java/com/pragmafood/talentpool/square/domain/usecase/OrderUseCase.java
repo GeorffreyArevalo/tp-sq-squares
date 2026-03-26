@@ -8,12 +8,16 @@ import com.pragmafood.talentpool.square.domain.enums.ExceptionMessages;
 import com.pragmafood.talentpool.square.domain.enums.OrderStatus;
 import com.pragmafood.talentpool.square.domain.exceptions.ActiveOrderExistsException;
 import com.pragmafood.talentpool.square.domain.exceptions.DishNotFoundException;
+import com.pragmafood.talentpool.square.domain.exceptions.EmployeeRestaurantNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.InvalidFieldsException;
 import com.pragmafood.talentpool.square.domain.exceptions.RestaurantNotFoundException;
 import com.pragmafood.talentpool.square.domain.models.Dish;
+import com.pragmafood.talentpool.square.domain.models.EmployeeRestaurant;
 import com.pragmafood.talentpool.square.domain.models.Order;
 import com.pragmafood.talentpool.square.domain.models.OrderDish;
+import com.pragmafood.talentpool.square.domain.models.PaginatedResult;
 import com.pragmafood.talentpool.square.domain.spi.DishPersistencePort;
+import com.pragmafood.talentpool.square.domain.spi.EmployeeRestaurantPersistencePort;
 import com.pragmafood.talentpool.square.domain.spi.OrderPersistencePort;
 import com.pragmafood.talentpool.square.domain.spi.RestaurantPersistencePort;
 
@@ -22,13 +26,16 @@ public class OrderUseCase implements OrderServicePort {
     private final OrderPersistencePort orderPersistencePort;
     private final DishPersistencePort dishPersistencePort;
     private final RestaurantPersistencePort restaurantPersistencePort;
+    private final EmployeeRestaurantPersistencePort employeeRestaurantPersistencePort;
 
     public OrderUseCase(OrderPersistencePort orderPersistencePort,
                         DishPersistencePort dishPersistencePort,
-                        RestaurantPersistencePort restaurantPersistencePort) {
+                        RestaurantPersistencePort restaurantPersistencePort,
+                        EmployeeRestaurantPersistencePort employeeRestaurantPersistencePort) {
         this.orderPersistencePort = orderPersistencePort;
         this.dishPersistencePort = dishPersistencePort;
         this.restaurantPersistencePort = restaurantPersistencePort;
+        this.employeeRestaurantPersistencePort = employeeRestaurantPersistencePort;
     }
 
     @Override
@@ -73,6 +80,14 @@ public class OrderUseCase implements OrderServicePort {
         if (restaurantId == null) {
             throw new InvalidFieldsException(ExceptionMessages.ORDER_RESTAURANT_ID_REQUIRED.getMessage());
         }
+    }
+
+    @Override
+    public PaginatedResult<Order> listOrdersByStatus(Long employeeId, OrderStatus status, int page, int size) {
+        EmployeeRestaurant employeeRestaurant = employeeRestaurantPersistencePort.findByEmployeeId(employeeId)
+                .orElseThrow(() -> new EmployeeRestaurantNotFoundException(ExceptionMessages.EMPLOYEE_RESTAURANT_NOT_FOUND.getMessage()));
+
+        return orderPersistencePort.findOrdersByRestaurantIdAndStatus(employeeRestaurant.getRestaurantId(), status, page, size);
     }
 
     private void validateDishes(List<OrderDish> dishes) {

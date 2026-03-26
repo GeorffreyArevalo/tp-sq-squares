@@ -26,7 +26,10 @@ public enum ExceptionMessages {
     ORDER_DISH_QUANTITY_INVALID("Each dish quantity must be a positive integer greater than 0"),
     ORDER_DISHES_NOT_SAME_RESTAURANT("All dishes must belong to the specified restaurant"),
     ORDER_DISH_NOT_FOUND("One or more dishes were not found"),
-    ACTIVE_ORDER_EXISTS("The client already has an active order");
+    ACTIVE_ORDER_EXISTS("The client already has an active order"),
+    EMPLOYEE_ID_REQUIRED("The employee ID is required"),
+    EMPLOYEE_RESTAURANT_ID_REQUIRED("The restaurant ID is required to assign an employee"),
+    EMPLOYEE_RESTAURANT_NOT_FOUND("The employee is not associated with any restaurant");
 
     private final String message;
 

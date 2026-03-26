@@ -10,7 +10,8 @@ public enum StatusCodeException {
     USER_UNDER_AGE("40-UUA"),
     RESTAURANT_NOT_FOUND("44-RNF"),
     DISH_NOT_FOUND("44-DNF"),
-    ACTIVE_ORDER_EXISTS("49-AOE");
+    ACTIVE_ORDER_EXISTS("49-AOE"),
+    EMPLOYEE_RESTAURANT_NOT_FOUND("44-ERNF");
 
     private final String code;
 
