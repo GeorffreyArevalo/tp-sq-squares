@@ -24,6 +24,7 @@ public class UserValidationFeignAdapter implements UserClientPort {
             UserResponse user = userFeignClient.getUserById(userId);
             return user != null && ROLE_OWNER.equalsIgnoreCase(user.getRole());
         } catch (Exception e) {
+            log.error("Error validating user role for userId {}: {}", userId, e.getMessage());
             return false;
         }
     }
