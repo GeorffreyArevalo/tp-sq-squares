@@ -7,6 +7,7 @@ import com.pragmafood.talentpool.square.domain.exceptions.InvalidFieldsException
 import com.pragmafood.talentpool.square.domain.exceptions.RestaurantNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.UserNotOwnerException;
 import com.pragmafood.talentpool.square.domain.models.Dish;
+import com.pragmafood.talentpool.square.domain.models.PaginatedResult;
 import com.pragmafood.talentpool.square.domain.models.Restaurant;
 import com.pragmafood.talentpool.square.domain.spi.DishPersistencePort;
 import com.pragmafood.talentpool.square.domain.spi.RestaurantPersistencePort;
@@ -116,5 +117,13 @@ public class DishUseCase implements DishServicePort {
         dish.setActive(active);
 
         return dishPersistencePort.saveDish(dish);
+    }
+
+    @Override
+    public PaginatedResult<Dish> listDishesByRestaurant(Long restaurantId, String category, int page, int size, String sortDirection) {
+        restaurantPersistencePort.findById(restaurantId)
+                .orElseThrow(() -> new RestaurantNotFoundException(ExceptionMessages.RESTAURANT_NOT_FOUND.getMessage()));
+
+        return dishPersistencePort.findDishesByRestaurantId(restaurantId, category, page, size, sortDirection);
     }
 }

@@ -1,6 +1,7 @@
 package com.pragmafood.talentpool.square.application.mappers;
 
 import com.pragmafood.talentpool.square.application.dtos.requests.DishRequest;
+import com.pragmafood.talentpool.square.application.dtos.responses.DishListItemResponse;
 import com.pragmafood.talentpool.square.application.dtos.responses.DishResponse;
 import com.pragmafood.talentpool.square.domain.models.Dish;
 import org.mapstruct.Mapper;
@@ -18,4 +19,6 @@ public interface DishRequestMapper {
     Dish toDomain(DishRequest dishRequest);
 
     DishResponse toResponse(Dish dish);
+
+    DishListItemResponse toListItemResponse(Dish dish);
 }
