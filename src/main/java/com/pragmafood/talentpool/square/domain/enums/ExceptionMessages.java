@@ -32,7 +32,9 @@ public enum ExceptionMessages {
     EMPLOYEE_RESTAURANT_NOT_FOUND("The employee is not associated with any restaurant"),
     ORDER_NOT_FOUND("The order was not found"),
     ORDER_NOT_PENDING("The order is not in pending status"),
-    ORDER_NOT_BELONGS_TO_RESTAURANT("The order does not belong to the employee's restaurant");
+    ORDER_NOT_BELONGS_TO_RESTAURANT("The order does not belong to the employee's restaurant"),
+    ORDER_NOT_IN_PREPARATION("The order is not in preparation status"),
+    ORDER_NOT_ASSIGNED_TO_EMPLOYEE("The order is not assigned to this employee");
 
     private final String message;
 

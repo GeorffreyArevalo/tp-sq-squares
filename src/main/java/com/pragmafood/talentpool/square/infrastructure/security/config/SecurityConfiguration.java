@@ -52,6 +52,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PATCH, "/dish/**").hasRole("OWNER")
                 .requestMatchers(HttpMethod.POST, "/order").hasRole("CLIENT")
                 .requestMatchers(HttpMethod.GET, "/order").hasRole("EMPLOYEE")
+                .requestMatchers(HttpMethod.PATCH, "/order/*/assign").hasRole("EMPLOYEE")
+                .requestMatchers(HttpMethod.PATCH, "/order/*/ready").hasRole("EMPLOYEE")
                 .requestMatchers(HttpMethod.POST, "/employee-restaurant").hasRole("OWNER")
                 .anyRequest().authenticated()
             )

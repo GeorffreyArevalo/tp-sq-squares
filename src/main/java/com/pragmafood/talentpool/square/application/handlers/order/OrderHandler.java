@@ -11,4 +11,6 @@ public interface OrderHandler {
     PaginatedResponse<OrderResponse> listOrdersByStatus(Long employeeId, String status, int page, int size);
 
     OrderResponse assignOrder(Long orderId, Long employeeId);
+
+    OrderResponse markOrderAsReady(Long orderId, Long employeeId);
 }

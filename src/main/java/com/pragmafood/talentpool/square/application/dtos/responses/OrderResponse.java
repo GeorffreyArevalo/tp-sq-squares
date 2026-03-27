@@ -11,6 +11,7 @@ public record OrderResponse(
     List<OrderDishResponse> dishes,
     String status,
     LocalDateTime createdAt,
-    Long assignedEmployeeId
+    Long assignedEmployeeId,
+    String securityPin
 
 ) {}

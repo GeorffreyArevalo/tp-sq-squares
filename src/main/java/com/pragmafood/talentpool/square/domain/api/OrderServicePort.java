@@ -11,4 +11,6 @@ public interface OrderServicePort {
     PaginatedResult<Order> listOrdersByStatus(Long employeeId, OrderStatus status, int page, int size);
 
     Order assignOrderToEmployee(Long orderId, Long employeeId);
+
+    Order markOrderAsReady(Long orderId, Long employeeId);
 }

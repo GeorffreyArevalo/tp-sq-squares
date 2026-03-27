@@ -54,4 +54,12 @@ public class OrderRestController {
         Long employeeId = Long.valueOf(jwt.getSubject());
         return ResponseEntity.ok(orderHandler.assignOrder(orderId, employeeId));
     }
+
+    @PatchMapping("/{orderId}/ready")
+    public ResponseEntity<OrderResponse> markOrderAsReady(
+            @PathVariable("orderId") Long orderId,
+            @AuthenticationPrincipal Jwt jwt) {
+        Long employeeId = Long.valueOf(jwt.getSubject());
+        return ResponseEntity.ok(orderHandler.markOrderAsReady(orderId, employeeId));
+    }
 }

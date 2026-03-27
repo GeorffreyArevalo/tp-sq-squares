@@ -14,11 +14,12 @@ public class Order {
     private OrderStatus status;
     private LocalDateTime createdAt;
     private Long assignedEmployeeId;
+    private String securityPin;
 
     public Order() {
     }
 
-    public Order(Long id, Long clientId, Long restaurantId, List<OrderDish> dishes, OrderStatus status, LocalDateTime createdAt, Long assignedEmployeeId) {
+    public Order(Long id, Long clientId, Long restaurantId, List<OrderDish> dishes, OrderStatus status, LocalDateTime createdAt, Long assignedEmployeeId, String securityPin) {
         this.id = id;
         this.clientId = clientId;
         this.restaurantId = restaurantId;
@@ -26,6 +27,7 @@ public class Order {
         this.status = status;
         this.createdAt = createdAt;
         this.assignedEmployeeId = assignedEmployeeId;
+        this.securityPin = securityPin;
     }
 
     public Long getId() {
@@ -82,5 +84,13 @@ public class Order {
 
     public void setAssignedEmployeeId(Long assignedEmployeeId) {
         this.assignedEmployeeId = assignedEmployeeId;
+    }
+
+    public String getSecurityPin() {
+        return securityPin;
+    }
+
+    public void setSecurityPin(String securityPin) {
+        this.securityPin = securityPin;
     }
 }

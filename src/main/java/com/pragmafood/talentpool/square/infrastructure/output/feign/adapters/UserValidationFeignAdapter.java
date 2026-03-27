@@ -28,4 +28,16 @@ public class UserValidationFeignAdapter implements UserClientPort {
             return false;
         }
     }
+
+    @Override
+    public String getUserPhone(Long userId) {
+        UserResponse user = userFeignClient.getUserById(userId);
+        return user.getPhone();
+    }
+
+    @Override
+    public String getUserFullName(Long userId) {
+        UserResponse user = userFeignClient.getUserById(userId);
+        return user.getName() + " " + user.getLastName();
+    }
 }

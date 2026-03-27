@@ -57,4 +57,11 @@ public class OrderHandlerImpl implements OrderHandler {
         Order order = orderServicePort.assignOrderToEmployee(orderId, employeeId);
         return orderRequestMapper.toResponse(order);
     }
+
+    @Override
+    @Transactional
+    public OrderResponse markOrderAsReady(Long orderId, Long employeeId) {
+        Order order = orderServicePort.markOrderAsReady(orderId, employeeId);
+        return orderRequestMapper.toResponse(order);
+    }
 }
