@@ -16,4 +16,6 @@ public interface OrderHandler {
     OrderResponse markOrderAsReady(Long orderId, Long employeeId);
 
     OrderResponse deliverOrder(Long orderId, Long employeeId, DeliverOrderRequest deliverOrderRequest);
+
+    OrderResponse cancelOrder(Long orderId, Long clientId);
 }

@@ -72,4 +72,12 @@ public class OrderRestController {
         Long employeeId = Long.valueOf(jwt.getSubject());
         return ResponseEntity.ok(orderHandler.deliverOrder(orderId, employeeId, deliverOrderRequest));
     }
+
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity<OrderResponse> cancelOrder(
+            @PathVariable("orderId") Long orderId,
+            @AuthenticationPrincipal Jwt jwt) {
+        Long clientId = Long.valueOf(jwt.getSubject());
+        return ResponseEntity.ok(orderHandler.cancelOrder(orderId, clientId));
+    }
 }

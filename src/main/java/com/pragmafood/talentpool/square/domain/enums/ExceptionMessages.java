@@ -36,7 +36,9 @@ public enum ExceptionMessages {
     ORDER_NOT_IN_PREPARATION("The order is not in preparation status"),
     ORDER_NOT_ASSIGNED_TO_EMPLOYEE("The order is not assigned to this employee"),
     ORDER_NOT_READY("The order is not in ready status"),
-    INVALID_SECURITY_PIN("The security pin is invalid");
+    INVALID_SECURITY_PIN("The security pin is invalid"),
+    ORDER_NOT_BELONGS_TO_CLIENT("The order does not belong to this client"),
+    ORDER_ALREADY_IN_PREPARATION("Lo sentimos, tu pedido ya está en preparación y no puede cancelarse");
 
     private final String message;
 

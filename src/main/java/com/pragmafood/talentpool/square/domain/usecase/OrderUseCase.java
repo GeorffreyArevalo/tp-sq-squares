@@ -14,7 +14,9 @@ import com.pragmafood.talentpool.square.domain.exceptions.DishNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.EmployeeRestaurantNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.InvalidFieldsException;
 import com.pragmafood.talentpool.square.domain.exceptions.InvalidSecurityPinException;
+import com.pragmafood.talentpool.square.domain.exceptions.OrderAlreadyInPreparationException;
 import com.pragmafood.talentpool.square.domain.exceptions.OrderNotAssignedToEmployeeException;
+import com.pragmafood.talentpool.square.domain.exceptions.OrderNotBelongsToClientException;
 import com.pragmafood.talentpool.square.domain.exceptions.OrderNotBelongsToRestaurantException;
 import com.pragmafood.talentpool.square.domain.exceptions.OrderNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.OrderNotInPreparationException;
@@ -192,6 +194,24 @@ public class OrderUseCase implements OrderServicePort {
         }
 
         order.setStatus(OrderStatus.DELIVERED);
+
+        return orderPersistencePort.saveOrder(order);
+    }
+
+    @Override
+    public Order cancelOrder(Long orderId, Long clientId) {
+        Order order = orderPersistencePort.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(ExceptionMessages.ORDER_NOT_FOUND.getMessage()));
+
+        if (!clientId.equals(order.getClientId())) {
+            throw new OrderNotBelongsToClientException(ExceptionMessages.ORDER_NOT_BELONGS_TO_CLIENT.getMessage());
+        }
+
+        if (order.getStatus() != OrderStatus.PENDING) {
+            throw new OrderAlreadyInPreparationException(ExceptionMessages.ORDER_ALREADY_IN_PREPARATION.getMessage());
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
 
         return orderPersistencePort.saveOrder(order);
     }

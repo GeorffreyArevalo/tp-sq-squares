@@ -72,4 +72,11 @@ public class OrderHandlerImpl implements OrderHandler {
         Order order = orderServicePort.deliverOrder(orderId, employeeId, deliverOrderRequest.securityPin());
         return orderRequestMapper.toResponse(order);
     }
+
+    @Override
+    @Transactional
+    public OrderResponse cancelOrder(Long orderId, Long clientId) {
+        Order order = orderServicePort.cancelOrder(orderId, clientId);
+        return orderRequestMapper.toResponse(order);
+    }
 }
