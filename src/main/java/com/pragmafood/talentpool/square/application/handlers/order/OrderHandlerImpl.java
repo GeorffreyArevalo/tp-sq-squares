@@ -2,6 +2,7 @@ package com.pragmafood.talentpool.square.application.handlers.order;
 
 import java.util.List;
 
+import com.pragmafood.talentpool.square.application.dtos.requests.DeliverOrderRequest;
 import com.pragmafood.talentpool.square.application.dtos.requests.OrderRequest;
 import com.pragmafood.talentpool.square.application.dtos.responses.OrderResponse;
 import com.pragmafood.talentpool.square.application.dtos.responses.PaginatedResponse;
@@ -62,6 +63,13 @@ public class OrderHandlerImpl implements OrderHandler {
     @Transactional
     public OrderResponse markOrderAsReady(Long orderId, Long employeeId) {
         Order order = orderServicePort.markOrderAsReady(orderId, employeeId);
+        return orderRequestMapper.toResponse(order);
+    }
+
+    @Override
+    @Transactional
+    public OrderResponse deliverOrder(Long orderId, Long employeeId, DeliverOrderRequest deliverOrderRequest) {
+        Order order = orderServicePort.deliverOrder(orderId, employeeId, deliverOrderRequest.securityPin());
         return orderRequestMapper.toResponse(order);
     }
 }

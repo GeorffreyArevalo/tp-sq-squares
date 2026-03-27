@@ -13,11 +13,13 @@ import com.pragmafood.talentpool.square.domain.exceptions.ActiveOrderExistsExcep
 import com.pragmafood.talentpool.square.domain.exceptions.DishNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.EmployeeRestaurantNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.InvalidFieldsException;
+import com.pragmafood.talentpool.square.domain.exceptions.InvalidSecurityPinException;
 import com.pragmafood.talentpool.square.domain.exceptions.OrderNotAssignedToEmployeeException;
 import com.pragmafood.talentpool.square.domain.exceptions.OrderNotBelongsToRestaurantException;
 import com.pragmafood.talentpool.square.domain.exceptions.OrderNotFoundException;
 import com.pragmafood.talentpool.square.domain.exceptions.OrderNotInPreparationException;
 import com.pragmafood.talentpool.square.domain.exceptions.OrderNotPendingException;
+import com.pragmafood.talentpool.square.domain.exceptions.OrderNotReadyException;
 import com.pragmafood.talentpool.square.domain.exceptions.RestaurantNotFoundException;
 import com.pragmafood.talentpool.square.domain.models.Dish;
 import com.pragmafood.talentpool.square.domain.models.EmployeeRestaurant;
@@ -170,5 +172,27 @@ public class OrderUseCase implements OrderServicePort {
         SecureRandom random = new SecureRandom();
         int pin = random.nextInt(PIN_BOUND);
         return String.format(PIN_FORMAT, pin);
+    }
+
+    @Override
+    public Order deliverOrder(Long orderId, Long employeeId, String securityPin) {
+        Order order = orderPersistencePort.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(ExceptionMessages.ORDER_NOT_FOUND.getMessage()));
+
+        if (!employeeId.equals(order.getAssignedEmployeeId())) {
+            throw new OrderNotAssignedToEmployeeException(ExceptionMessages.ORDER_NOT_ASSIGNED_TO_EMPLOYEE.getMessage());
+        }
+
+        if (order.getStatus() != OrderStatus.READY) {
+            throw new OrderNotReadyException(ExceptionMessages.ORDER_NOT_READY.getMessage());
+        }
+
+        if (!securityPin.equals(order.getSecurityPin())) {
+            throw new InvalidSecurityPinException(ExceptionMessages.INVALID_SECURITY_PIN.getMessage());
+        }
+
+        order.setStatus(OrderStatus.DELIVERED);
+
+        return orderPersistencePort.saveOrder(order);
     }
 }

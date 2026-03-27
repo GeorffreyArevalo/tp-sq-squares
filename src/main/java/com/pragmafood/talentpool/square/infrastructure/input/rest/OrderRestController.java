@@ -1,5 +1,6 @@
 package com.pragmafood.talentpool.square.infrastructure.input.rest;
 
+import com.pragmafood.talentpool.square.application.dtos.requests.DeliverOrderRequest;
 import com.pragmafood.talentpool.square.application.dtos.requests.OrderRequest;
 import com.pragmafood.talentpool.square.application.dtos.responses.OrderResponse;
 import com.pragmafood.talentpool.square.application.dtos.responses.PaginatedResponse;
@@ -61,5 +62,14 @@ public class OrderRestController {
             @AuthenticationPrincipal Jwt jwt) {
         Long employeeId = Long.valueOf(jwt.getSubject());
         return ResponseEntity.ok(orderHandler.markOrderAsReady(orderId, employeeId));
+    }
+
+    @PatchMapping("/{orderId}/deliver")
+    public ResponseEntity<OrderResponse> deliverOrder(
+            @PathVariable("orderId") Long orderId,
+            @Valid @RequestBody DeliverOrderRequest deliverOrderRequest,
+            @AuthenticationPrincipal Jwt jwt) {
+        Long employeeId = Long.valueOf(jwt.getSubject());
+        return ResponseEntity.ok(orderHandler.deliverOrder(orderId, employeeId, deliverOrderRequest));
     }
 }

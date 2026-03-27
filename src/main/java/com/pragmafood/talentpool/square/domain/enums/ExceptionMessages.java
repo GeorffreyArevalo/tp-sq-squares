@@ -34,7 +34,9 @@ public enum ExceptionMessages {
     ORDER_NOT_PENDING("The order is not in pending status"),
     ORDER_NOT_BELONGS_TO_RESTAURANT("The order does not belong to the employee's restaurant"),
     ORDER_NOT_IN_PREPARATION("The order is not in preparation status"),
-    ORDER_NOT_ASSIGNED_TO_EMPLOYEE("The order is not assigned to this employee");
+    ORDER_NOT_ASSIGNED_TO_EMPLOYEE("The order is not assigned to this employee"),
+    ORDER_NOT_READY("The order is not in ready status"),
+    INVALID_SECURITY_PIN("The security pin is invalid");
 
     private final String message;
 

@@ -13,4 +13,6 @@ public interface OrderServicePort {
     Order assignOrderToEmployee(Long orderId, Long employeeId);
 
     Order markOrderAsReady(Long orderId, Long employeeId);
+
+    Order deliverOrder(Long orderId, Long employeeId, String securityPin);
 }
