@@ -16,13 +16,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/employee-restaurant")
 @RequiredArgsConstructor
+@Tag(name = "Empleados de Restaurante", description = "Asignación de empleados a restaurantes")
 public class EmployeeRestaurantRestController {
 
     private final EmployeeRestaurantHandler employeeRestaurantHandler;
 
+    @Operation(
+        summary = "Asignar empleado a restaurante",
+        description = "Asigna un empleado a un restaurante.",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(schema = @Schema(implementation = EmployeeRestaurantRequest.class))
+        ),
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Empleado asignado", content = @Content(schema = @Schema(implementation = EmployeeRestaurantResponse.class)))
+        }
+    )
     @PostMapping
     public ResponseEntity<EmployeeRestaurantResponse> assignEmployeeToRestaurant(
             @Valid @RequestBody EmployeeRestaurantRequest request,

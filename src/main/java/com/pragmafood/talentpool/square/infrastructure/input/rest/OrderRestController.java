@@ -22,13 +22,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 @RestController
 @RequestMapping("/order")
 @RequiredArgsConstructor
+@Tag(name = "Órdenes", description = "Gestión de órdenes")
 public class OrderRestController {
 
     private final OrderHandler orderHandler;
 
+    @Operation(
+        summary = "Crear orden",
+        description = "Crea una nueva orden.",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(schema = @Schema(implementation = OrderRequest.class))
+        ),
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Orden creada", content = @Content(schema = @Schema(implementation = OrderResponse.class)))
+        }
+    )
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
             @Valid @RequestBody OrderRequest orderRequest,
@@ -38,6 +57,18 @@ public class OrderRestController {
                 .body(orderHandler.createOrder(orderRequest, clientId));
     }
 
+    @Operation(
+        summary = "Listar órdenes por estado",
+        description = "Obtiene una lista paginada de órdenes filtradas por estado.",
+        parameters = {
+            @Parameter(name = "status", description = "Estado de la orden"),
+            @Parameter(name = "page", description = "Página", example = "0"),
+            @Parameter(name = "size", description = "Tamaño de página", example = "10")
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Lista de órdenes", content = @Content(schema = @Schema(implementation = PaginatedResponse.class)))
+        }
+    )
     @GetMapping
     public ResponseEntity<PaginatedResponse<OrderResponse>> listOrdersByStatus(
             @RequestParam("status") String status,
@@ -48,6 +79,16 @@ public class OrderRestController {
         return ResponseEntity.ok(orderHandler.listOrdersByStatus(employeeId, status, page, size));
     }
 
+    @Operation(
+        summary = "Asignar orden",
+        description = "Asigna una orden a un empleado.",
+        parameters = {
+            @Parameter(name = "orderId", description = "ID de la orden")
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Orden asignada", content = @Content(schema = @Schema(implementation = OrderResponse.class)))
+        }
+    )
     @PatchMapping("/{orderId}/assign")
     public ResponseEntity<OrderResponse> assignOrder(
             @PathVariable("orderId") Long orderId,
@@ -56,6 +97,16 @@ public class OrderRestController {
         return ResponseEntity.ok(orderHandler.assignOrder(orderId, employeeId));
     }
 
+    @Operation(
+        summary = "Marcar orden como lista",
+        description = "Marca una orden como lista para entrega.",
+        parameters = {
+            @Parameter(name = "orderId", description = "ID de la orden")
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Orden lista", content = @Content(schema = @Schema(implementation = OrderResponse.class)))
+        }
+    )
     @PatchMapping("/{orderId}/ready")
     public ResponseEntity<OrderResponse> markOrderAsReady(
             @PathVariable("orderId") Long orderId,
@@ -64,6 +115,20 @@ public class OrderRestController {
         return ResponseEntity.ok(orderHandler.markOrderAsReady(orderId, employeeId));
     }
 
+    @Operation(
+        summary = "Entregar orden",
+        description = "Entrega una orden.",
+        parameters = {
+            @Parameter(name = "orderId", description = "ID de la orden")
+        },
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(schema = @Schema(implementation = DeliverOrderRequest.class))
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Orden entregada", content = @Content(schema = @Schema(implementation = OrderResponse.class)))
+        }
+    )
     @PatchMapping("/{orderId}/deliver")
     public ResponseEntity<OrderResponse> deliverOrder(
             @PathVariable("orderId") Long orderId,
@@ -73,6 +138,16 @@ public class OrderRestController {
         return ResponseEntity.ok(orderHandler.deliverOrder(orderId, employeeId, deliverOrderRequest));
     }
 
+    @Operation(
+        summary = "Cancelar orden",
+        description = "Cancela una orden.",
+        parameters = {
+            @Parameter(name = "orderId", description = "ID de la orden")
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Orden cancelada", content = @Content(schema = @Schema(implementation = OrderResponse.class)))
+        }
+    )
     @PatchMapping("/{orderId}/cancel")
     public ResponseEntity<OrderResponse> cancelOrder(
             @PathVariable("orderId") Long orderId,

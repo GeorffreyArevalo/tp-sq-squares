@@ -24,6 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
+@Tag(name = "Platos", description = "Gestión de platos")
 @RestController
 @RequestMapping("/dish")
 @RequiredArgsConstructor
@@ -31,6 +39,17 @@ public class DishRestController {
 
     private final DishHandler dishHandler;
 
+    @Operation(
+        summary = "Crear plato",
+        description = "Crea un nuevo plato.",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(schema = @Schema(implementation = DishRequest.class))
+        ),
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Plato creado", content = @Content(schema = @Schema(implementation = DishResponse.class)))
+        }
+    )
     @PostMapping
     public ResponseEntity<DishResponse> createDish(
             @Valid @RequestBody DishRequest dishRequest,
@@ -40,6 +59,20 @@ public class DishRestController {
                 .body(dishHandler.createDish(dishRequest, ownerId));
     }
 
+    @Operation(
+        summary = "Actualizar plato",
+        description = "Actualiza la información de un plato.",
+        parameters = {
+            @Parameter(name = "dishId", description = "ID del plato")
+        },
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(schema = @Schema(implementation = UpdateDishRequest.class))
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Plato actualizado", content = @Content(schema = @Schema(implementation = DishResponse.class)))
+        }
+    )
     @PatchMapping("/{dishId}")
     public ResponseEntity<DishResponse> updateDish(
             @PathVariable("dishId") Long dishId,
@@ -49,6 +82,20 @@ public class DishRestController {
         return ResponseEntity.ok(dishHandler.updateDish(dishId, updateDishRequest, ownerId));
     }
 
+    @Operation(
+        summary = "Cambiar estado del plato",
+        description = "Activa o desactiva un plato.",
+        parameters = {
+            @Parameter(name = "dishId", description = "ID del plato")
+        },
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(schema = @Schema(implementation = ToggleDishStatusRequest.class))
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Estado actualizado", content = @Content(schema = @Schema(implementation = DishResponse.class)))
+        }
+    )
     @PatchMapping("/{dishId}/status")
     public ResponseEntity<DishResponse> toggleDishStatus(
             @PathVariable("dishId") Long dishId,
