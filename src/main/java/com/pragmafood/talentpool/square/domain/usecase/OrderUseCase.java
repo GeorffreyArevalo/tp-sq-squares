@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.pragmafood.talentpool.square.domain.api.OrderServicePort;
 import com.pragmafood.talentpool.square.domain.clients.NotificationClientPort;
+import com.pragmafood.talentpool.square.domain.clients.TraceabilityClientPort;
 import com.pragmafood.talentpool.square.domain.clients.UserClientPort;
 import com.pragmafood.talentpool.square.domain.enums.ExceptionMessages;
 import com.pragmafood.talentpool.square.domain.enums.OrderStatus;
@@ -44,19 +45,22 @@ public class OrderUseCase implements OrderServicePort {
     private final EmployeeRestaurantPersistencePort employeeRestaurantPersistencePort;
     private final UserClientPort userClientPort;
     private final NotificationClientPort notificationClientPort;
+    private final TraceabilityClientPort traceabilityClientPort;
 
     public OrderUseCase(OrderPersistencePort orderPersistencePort,
                         DishPersistencePort dishPersistencePort,
                         RestaurantPersistencePort restaurantPersistencePort,
                         EmployeeRestaurantPersistencePort employeeRestaurantPersistencePort,
                         UserClientPort userClientPort,
-                        NotificationClientPort notificationClientPort) {
+                        NotificationClientPort notificationClientPort,
+                        TraceabilityClientPort traceabilityClientPort) {
         this.orderPersistencePort = orderPersistencePort;
         this.dishPersistencePort = dishPersistencePort;
         this.restaurantPersistencePort = restaurantPersistencePort;
         this.employeeRestaurantPersistencePort = employeeRestaurantPersistencePort;
         this.userClientPort = userClientPort;
         this.notificationClientPort = notificationClientPort;
+        this.traceabilityClientPort = traceabilityClientPort;
     }
 
     @Override
@@ -94,7 +98,12 @@ public class OrderUseCase implements OrderServicePort {
         order.setStatus(OrderStatus.PENDING);
         order.setCreatedAt(LocalDateTime.now());
 
-        return orderPersistencePort.saveOrder(order);
+        Order savedOrder = orderPersistencePort.saveOrder(order);
+
+        traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
+                null, OrderStatus.PENDING, null);
+
+        return savedOrder;
     }
 
     private void validateRestaurantId(Long restaurantId) {
@@ -130,7 +139,12 @@ public class OrderUseCase implements OrderServicePort {
         order.setAssignedEmployeeId(employeeId);
         order.setStatus(OrderStatus.IN_PREPARATION);
 
-        return orderPersistencePort.saveOrder(order);
+        Order savedOrder = orderPersistencePort.saveOrder(order);
+
+        traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
+                OrderStatus.PENDING, OrderStatus.IN_PREPARATION, employeeId);
+
+        return savedOrder;
     }
 
     private void validateDishes(List<OrderDish> dishes) {
@@ -162,6 +176,9 @@ public class OrderUseCase implements OrderServicePort {
         order.setStatus(OrderStatus.READY);
 
         Order savedOrder = orderPersistencePort.saveOrder(order);
+
+        traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
+                OrderStatus.IN_PREPARATION, OrderStatus.READY, employeeId);
 
         String clientName = userClientPort.getUserFullName(order.getClientId());
         String clientPhone = userClientPort.getUserPhone(order.getClientId());
@@ -195,7 +212,12 @@ public class OrderUseCase implements OrderServicePort {
 
         order.setStatus(OrderStatus.DELIVERED);
 
-        return orderPersistencePort.saveOrder(order);
+        Order savedOrder = orderPersistencePort.saveOrder(order);
+
+        traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
+                OrderStatus.READY, OrderStatus.DELIVERED, employeeId);
+
+        return savedOrder;
     }
 
     @Override
@@ -213,6 +235,11 @@ public class OrderUseCase implements OrderServicePort {
 
         order.setStatus(OrderStatus.CANCELLED);
 
-        return orderPersistencePort.saveOrder(order);
+        Order savedOrder = orderPersistencePort.saveOrder(order);
+
+        traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
+                OrderStatus.PENDING, OrderStatus.CANCELLED, null);
+
+        return savedOrder;
     }
 }
