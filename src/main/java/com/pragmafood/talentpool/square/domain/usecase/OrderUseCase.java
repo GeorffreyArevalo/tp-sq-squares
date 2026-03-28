@@ -29,10 +29,13 @@ import com.pragmafood.talentpool.square.domain.models.EmployeeRestaurant;
 import com.pragmafood.talentpool.square.domain.models.Order;
 import com.pragmafood.talentpool.square.domain.models.OrderDish;
 import com.pragmafood.talentpool.square.domain.models.PaginatedResult;
+import com.pragmafood.talentpool.square.domain.models.Restaurant;
 import com.pragmafood.talentpool.square.domain.spi.DishPersistencePort;
 import com.pragmafood.talentpool.square.domain.spi.EmployeeRestaurantPersistencePort;
 import com.pragmafood.talentpool.square.domain.spi.OrderPersistencePort;
 import com.pragmafood.talentpool.square.domain.spi.RestaurantPersistencePort;
+
+import lombok.extern.java.Log;
 
 public class OrderUseCase implements OrderServicePort {
 
@@ -100,8 +103,12 @@ public class OrderUseCase implements OrderServicePort {
 
         Order savedOrder = orderPersistencePort.saveOrder(order);
 
+        Long ownerId = restaurantPersistencePort.findById(savedOrder.getRestaurantId())
+                .map(Restaurant::getOwnerId)
+                .orElse(null);
+
         traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
-                null, OrderStatus.PENDING, null);
+                null, OrderStatus.PENDING, savedOrder.getRestaurantId(), ownerId, savedOrder.getAssignedEmployeeId());
 
         return savedOrder;
     }
@@ -141,8 +148,12 @@ public class OrderUseCase implements OrderServicePort {
 
         Order savedOrder = orderPersistencePort.saveOrder(order);
 
+        Long ownerId = restaurantPersistencePort.findById(savedOrder.getRestaurantId())
+                .map(Restaurant::getOwnerId)
+                .orElse(null);
+
         traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
-                OrderStatus.PENDING, OrderStatus.IN_PREPARATION, employeeId);
+                OrderStatus.PENDING, OrderStatus.IN_PREPARATION, savedOrder.getRestaurantId(), ownerId, employeeId);
 
         return savedOrder;
     }
@@ -177,8 +188,12 @@ public class OrderUseCase implements OrderServicePort {
 
         Order savedOrder = orderPersistencePort.saveOrder(order);
 
+        Long ownerId = restaurantPersistencePort.findById(savedOrder.getRestaurantId())
+                .map(Restaurant::getOwnerId)
+                .orElse(null);
+
         traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
-                OrderStatus.IN_PREPARATION, OrderStatus.READY, employeeId);
+                OrderStatus.IN_PREPARATION, OrderStatus.READY, savedOrder.getRestaurantId(), ownerId, employeeId);
 
         String clientName = userClientPort.getUserFullName(order.getClientId());
         String clientPhone = userClientPort.getUserPhone(order.getClientId());
@@ -214,8 +229,12 @@ public class OrderUseCase implements OrderServicePort {
 
         Order savedOrder = orderPersistencePort.saveOrder(order);
 
+        Long ownerId = restaurantPersistencePort.findById(savedOrder.getRestaurantId())
+                .map(Restaurant::getOwnerId)
+                .orElse(null);
+
         traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
-                OrderStatus.READY, OrderStatus.DELIVERED, employeeId);
+                OrderStatus.READY, OrderStatus.DELIVERED, savedOrder.getRestaurantId(), ownerId, employeeId);
 
         return savedOrder;
     }
@@ -237,8 +256,12 @@ public class OrderUseCase implements OrderServicePort {
 
         Order savedOrder = orderPersistencePort.saveOrder(order);
 
+        Long ownerId = restaurantPersistencePort.findById(savedOrder.getRestaurantId())
+                .map(Restaurant::getOwnerId)
+                .orElse(null);
+
         traceabilityClientPort.recordOrderStatusChange(savedOrder.getId(), savedOrder.getClientId(),
-                OrderStatus.PENDING, OrderStatus.CANCELLED, null);
+                OrderStatus.PENDING, OrderStatus.CANCELLED, savedOrder.getRestaurantId(), ownerId, savedOrder.getAssignedEmployeeId());
 
         return savedOrder;
     }

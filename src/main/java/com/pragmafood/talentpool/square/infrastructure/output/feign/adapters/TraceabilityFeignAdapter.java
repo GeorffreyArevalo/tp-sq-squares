@@ -21,12 +21,14 @@ public class TraceabilityFeignAdapter implements TraceabilityClientPort {
 
     @Override
     public void recordOrderStatusChange(Long orderId, Long clientId, OrderStatus previousStatus,
-                                         OrderStatus newStatus, Long employeeId) {
+                                         OrderStatus newStatus, Long restaurantId, Long ownerId, Long employeeId) {
         OrderTraceabilityRequest request = OrderTraceabilityRequest.builder()
                 .orderId(orderId)
                 .clientId(clientId)
                 .previousStatus(previousStatus != null ? previousStatus.name() : null)
                 .newStatus(newStatus.name())
+                .restaurantId(restaurantId)
+                .ownerId(ownerId)
                 .employeeId(employeeId)
                 .timestamp(LocalDateTime.now())
                 .build();

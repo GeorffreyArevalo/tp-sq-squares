@@ -18,5 +18,7 @@ public class OrderTraceabilityRequest {
     private String previousStatus;
     private String newStatus;
     private Long employeeId;
+    private Long restaurantId;
+    private Long ownerId;
     private LocalDateTime timestamp;
 }
